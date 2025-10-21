@@ -19,7 +19,7 @@
 .snack-error {
   @include mat.snack-bar-overrides((
     button-color: white,
-    container-color: red,
+    container-color: rgb(231, 0, 11),
     supporting-text-color: white
   ));
 }
