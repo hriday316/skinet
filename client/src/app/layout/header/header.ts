@@ -2,11 +2,15 @@ import { Component, inject } from '@angular/core';
 import {MatIcon} from '@angular/material/icon';
 import {MatButton} from '@angular/material/button';
 import {MatBadge} from '@angular/material/badge';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { RouterLinkActive } from '@angular/router';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { BusyService } from '../../core/services/busy';
 import { CartService } from '../../core/services/cart';
+import { AccountService } from '../../core/services/account';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatDivider } from '@angular/material/divider';
+ 
 
 @Component({
   selector: 'app-header',
@@ -16,13 +20,29 @@ import { CartService } from '../../core/services/cart';
     MatBadge,
     RouterLink,
     RouterLinkActive,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatMenuTrigger,
+    MatMenu,
+    MatDivider,
+    MatMenuItem
 
 ],
   templateUrl: './header.html',
-  styleUrl: './header.scss'
+  styleUrls: ['./header.scss']
 })
 export class HeaderComponent {
 busyService = inject(BusyService);
 cartService = inject(CartService);
+accountService = inject(AccountService);
+private router = inject(Router);
+
+logout() {
+  this.accountService.logout().subscribe({
+    next: () => {
+      this.accountService.currentUser.set(null);
+        // navigate to root explicitly to avoid ambiguous/relative navigation
+        this.router.navigateByUrl('/');
+    } 
+  });
+}
 }
