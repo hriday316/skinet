@@ -3,6 +3,7 @@ import { environment } from '../../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { User } from '../../shared/models/user';
 import { map } from 'rxjs/internal/operators/map';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -35,7 +36,14 @@ export class AccountService {
     return this.http.post(this.baseUrl + 'account/logout', {} );
   }
   updateAddress(address: any) {
-    return this.http.post<User>(this.baseUrl + 'account/address', address);
+    return this.http.post<User>(this.baseUrl + 'account/address', address).pipe(
+      tap( () =>{
+        this.currentUser.update( user => {
+          if(user) user.address = address;
+          return user;
+        });
+      })
+    )
   }
 
   getAuthState(){
